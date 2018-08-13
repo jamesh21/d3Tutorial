@@ -60,12 +60,6 @@ function drawChart (data, bTCValues) {
         .x(function(d) { return x(d.date)})
         .y(function(d) {return y(d.value)})
         x.domain(d3.extent(data, function(d) { return d.date}));
-        y.domain(d3.extent(data, function(d) { return d.value}));
-
-    var line = d3.line()
-        .x(function(d) { return x(d.date)})
-        .y(function(d) {return y(d.value)})
-        x.domain(d3.extent(data, function(d) { return d.date}));
         //y.domain(d3.extent(data, function(d) { return d.value}));
         y.domain([0, uCL + deviation]);
 
@@ -107,9 +101,17 @@ function drawChart (data, bTCValues) {
                     .attr("r", 4)
                     .on("mouseover", function() {
                         tooltip.style("display", null);
+                        d3.select(this)
+                            .transition()
+                            .style("fill", "red")
+                            .attr("r", 12);
                     })
                     .on("mouseout", function() {
                         tooltip.style("display", "none");
+                        d3.select(this)
+                            .transition()
+                            .style("fill", "black")
+                            .attr("r", 4);
                     })
                     .on("mousemove", function(d) {
                         var xPos = d3.mouse(this)[0] - 15;
@@ -117,9 +119,10 @@ function drawChart (data, bTCValues) {
                         tooltip.attr("transform", "translate(" + xPos + "," + yPos +")");
                         tooltip.select("text").text("$" + d.value);
                     });
-                    
+
     var tooltip = svg.append("g")
-        .style("display", "none");
+        .style("display", "none")
+        .attr("class", "tooltip");
 
     tooltip.append("text")
             .attr("x", 15)
